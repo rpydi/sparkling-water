@@ -43,6 +43,8 @@ class H2ODeepLearning(parameters: Option[DeepLearningParameters], override val u
 
   def this()(implicit h2oContext: H2OContext, sqlContext: SQLContext) = this(None, Identifiable.randomUID("dl"))
 
+  def this(uid: String, hc: H2OContext, sqlContext: SQLContext) = this(None, uid)(hc, sqlContext)
+
   def this(parameters: DeepLearningParameters)(implicit h2oContext: H2OContext, sqlContext: SQLContext) = this(Option(parameters), Identifiable.randomUID("dl"))
 
   def this(parameters: DeepLearningParameters, uid: String)(implicit h2oContext: H2OContext, sqlContext: SQLContext) = this(Option(parameters), uid)
@@ -99,11 +101,6 @@ trait H2ODeepLearningParams extends H2OAlgoParams[DeepLearningParameters] {
     getParams._hidden = value
   }
 
-  /** @group setParam */
-  def setResponseColumn(value: String) = set(responseColumn, value) {
-    getParams._response_column = value
-  }
-
   /**
     * All parameters should be set here along with their documentation and explained default values
     */
@@ -111,14 +108,12 @@ trait H2ODeepLearningParams extends H2OAlgoParams[DeepLearningParameters] {
   private final val l1 = doubleParam("l1")
   private final val l2 = doubleParam("l2")
   private final val hidden = new IntArrayParam(this, "hidden", doc("hidden"))
-  private final val responseColumn = param[String]("responseColumn")
 
   setDefault(
     epochs -> parameters._epochs,
     l1 -> parameters._l1,
     l2 -> parameters._l2,
-    hidden -> parameters._hidden,
-    responseColumn -> parameters._response_column)
+    hidden -> parameters._hidden)
 
   /** @group getParam */
   def getEpochs: Double = $(epochs)
@@ -131,8 +126,5 @@ trait H2ODeepLearningParams extends H2OAlgoParams[DeepLearningParameters] {
 
   /** @group getParam */
   def getHidden: Array[Int] = $(hidden)
-
-  /** @group getParam */
-  def getResponseColumn: String = $(responseColumn)
 
 }

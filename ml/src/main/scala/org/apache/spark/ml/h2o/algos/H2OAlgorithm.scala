@@ -72,6 +72,9 @@ abstract class H2OAlgorithm[P <: Model.Parameters : ClassTag, M <: SparkModel[M]
       getParams._train = input._key
     }
 
+    // set parameters before fitting
+    getParams._response_column = $(predictionCol)
+
     val trainFrame = getParams._train.get()
     if (getAllStringColumnsToCategorical()) {
       H2OFrameSupport.allStringVecToCategorical(trainFrame)
