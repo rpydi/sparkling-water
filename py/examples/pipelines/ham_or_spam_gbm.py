@@ -14,7 +14,7 @@ hc = H2OContext.getOrCreate(spark)
 # This is just helper function returning path to data-files
 def _locate(file_name):
     if os.path.isfile("/home/0xdiag/smalldata/" + file_name):
-        return "/home/0xdiag/smalldata/" + file_name
+        return "file:///home/0xdiag/smalldata/" + file_name
     else:
         return "../examples/smalldata/" + file_name
 
